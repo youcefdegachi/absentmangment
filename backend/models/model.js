@@ -2,15 +2,21 @@ import mongoose from 'mongoose';
 
 const userSchema = mongoose.Schema(
   {
-    firstName: {type: String, required: true},
-    lastName: {type: String, required: true},
-    phone: {type: String, required: true},
-    age: {type: Number, required: true}, //TODO: change to birth date
-    gender: { type: String, required: true}, //TODO: change to enum 
+    cin:{type: Number,required: true,unique: true},
+    name: {type: String, required: true},
+    // phone: {type: String, required: false}, //todo:
+    // dateBirth: {type: Number, required: false}, //TODO: change to birth date
+    // gender: { type: String, required: false}, //TODO: change to enum 
+    // image: {type: String, required: false}, //TODO: 
     email: { type: String, required: true, unique: true},
     password: { type: String, required: true},
 
-    role: { type: String, required: true, enum: ['Student', 'Teacher', 'Supervisor', 'Director', 'Secretary', 'Admin'] },
+    role: { 
+      type: String,
+      required: true,
+      enum: ['student', 'teacher', 'supervisor', 'director', 'secretary', 'admin'],
+      lowercase: true,
+    },
     // Additional attributes based on roles
     class: { 
       type: String,
@@ -23,9 +29,14 @@ const userSchema = mongoose.Schema(
         return this.role === 'Teacher';
       }
     }, // Reference to department for all roles
-    subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }], // Reference to subjects for students
+    subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject',
+      enum: ['sport', 'program', 'math', 'physique', 'database']
+    }], // Reference to subjects for students
     // subjects: [subjectSchema], // Reference to subjects for students
-    teachingSubjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }], // Reference to subjects for teachers
+    teachingSubjects: [{ type: mongoose.Schema.Types.ObjectId,
+      ref: 'Subject',
+      enum: ['sport', 'program', 'math', 'physique', 'database']
+      }], // Reference to subjects for teachers
     // Any other role-specific attributes can be added here
   },
   {
